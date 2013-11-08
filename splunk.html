@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+</head>
+
+<body>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script>
+
+var rawData = [
+  {"flower": "tulip", "date": "2/3/2012", "quantity-sold": "20", "quantity-unsold": "10"},
+  {"flower": "tulip", "date": "2/4/2012", "quantity-sold": "18", "quantity-unsold": "12"},
+  {"flower": "tulip", "date": "2/5/2012", "quantity-sold": "23", "quantity-unsold": "7"},
+  {"flower": "tulip", "date": "2/6/2012", "quantity-sold": "15", "quantity-unsold": "20"},
+  {"flower": "tulip", "date": "2/7/2012", "quantity-sold": "12", "quantity-unsold": "23"},
+  {"flower": "rose", "date": "2/3/2012", "quantity-sold": "50", "quantity-unsold": "40"},
+  {"flower": "rose", "date": "2/4/2012", "quantity-sold": "43", "quantity-unsold": "47"},
+  {"flower": "rose", "date": "2/5/2012", "quantity-sold": "55", "quantity-unsold": "35"},
+  {"flower": "rose", "date": "2/6/2012", "quantity-sold": "70", "quantity-unsold": "20"},
+  {"flower": "rose", "date": "2/7/2012", "quantity-sold": "30", "quantity-unsold": "70"},
+  {"flower": "dandelion", "date": "2/3/2012", "quantity-sold": "10", "quantity-unsold": "0"},
+  {"flower": "dandelion", "date": "2/4/2012", "quantity-sold": "9", "quantity-unsold": "11"},
+  {"flower": "dandelion", "date": "2/5/2012", "quantity-sold": "3", "quantity-unsold": "17"},
+  {"flower": "dandelion", "date": "2/6/2012", "quantity-sold": "4", "quantity-unsold": "16"},
+  {"flower": "dandelion", "date": "2/7/2012", "quantity-sold": "7", "quantity-unsold": "8"}
+];
+
+
+var dates = ["2/3/2012","2/4/2012","2/5/2012","2/6/2012","2/7/2012"];
+
+var tulipsSold = [20, 18, 23, 15, 12];
+var tulipsUnsold = [10, 12, 7, 20, 23];
+
+var rosesSold = [50, 43, 55, 70, 30];
+var rosesUnsold = [40, 47, 35, 20, 70];
+
+var dandelionsSold = [10, 9, 3, 4, 7];
+var dandelionsUnsold = [0, 11, 17, 16, 8];
+
+var tulipPercent = [];
+var rosePercent = [];
+var dandelionPercent = [];
+
+for (var i=0; i<5; i++){
+    tulipPercent.push(formatNum(tulipsSold[i]/(tulipsSold[i] + tulipsUnsold[i])));
+    rosePercent.push(formatNum(rosesSold[i]/(rosesSold[i] + rosesUnsold[i])));
+    dandelionPercent.push(formatNum(dandelionsSold[i]/(dandelionsSold[i] + dandelionsUnsold[i])));
+}
+
+function formatNum(num){
+    return (Math.round(num * 100));
+}
+
+var tulipStats = {name: "Tulips", data: tulipPercent, color: "#23BC13"};
+var roseStats = {name: "Roses", data: rosePercent, color: "#E61717"};
+var dandelionStats = {name: "Dandelions", data: dandelionPercent};
+
+$(function () {
+        $('#container').highcharts({
+            title: {
+                style: {
+                    color: '#3E576F',
+                    fontSize: '20px'
+                },
+                text: 'Flower Sales (1 week)',
+                x: -20 //center
+            },
+            xAxis: {
+                title: {
+                    text: 'Date'
+                },
+                categories: dates,
+                labels: {
+                    style: {
+                        color: '#6D869F',
+                        fontWeight: 'bold'
+                    }                    
+                }                
+            },
+            yAxis: {
+                title: {
+                    text: '% of flowers sold'
+                },
+                labels: {
+                    style: {
+                        color: '#6D869F',
+                        fontWeight: 'bold'
+                    }                    
+                },
+                min: 0,
+                max:100,
+                alternateGridColor: '#FDFFD5',
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                valueSuffix: '%',
+                pointFormat:'<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>'
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'middle',
+                borderWidth: 0
+            },
+            series: [tulipStats, roseStats, dandelionStats]
+        });
+    });
+</script>
+</body>
